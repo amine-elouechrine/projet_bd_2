@@ -18,30 +18,32 @@ class Window(tk.Toplevel):
         self.title('Q3 : départements pour une région donnée (version dynamique)')
         display.defineGridDisplay(self, 3, 3)
         self.grid_rowconfigure(3, weight=10) #On donne un poids plus important à la dernière ligne pour l'affichage du tableau
-        ttk.Label(self, text="On a repris le code de F2. Modifier l'interface pour proposer un choix dynamique de la région (par exemple un menu déroulant avec les valeurs extraites de la base, ou toute autre idée).",
+        ttk.Label(self, text="On a repris le code de F2. Modifier l'interface pour proposer un choix de la région sans saisie manuelle (par exemple un proposer un menu déroulant avec les valeurs extraites de la base, ou toute autre idée).",
                   wraplength=500, anchor="center", font=('Helvetica', '10', 'bold')).grid(sticky="we", row=0,columnspan=3)
 
         # Affichage du label, de la case de saisie et du bouton valider
         ttk.Label(self, text='Veuillez indiquer une région :', anchor="center", font=('Helvetica', '10', 'bold')).grid(row=1, column=0)
         #TODO Q3 C'est cette partie que l'on souhaite changer pour un choix dynamique de la région
+
+
         cursor = db.data.cursor()
-        region = cursor.execute("""SELECT  nom_region
-                                            FROM Regions """)
+        cursor.execute("""SELECT nom_region
+                                FROM Region""", )
+        region = cursor.fetchall()
+        region_names = [region[0] for region in region]  # Créer une liste avec les noms des régions
+        root=tk.Tk()
+        root.title("Liste des Régions")
 
-        options = [row[0] for row in region.fetchall()]
+        selected_region = tk.StringVar()
+        self.region_combobox = ttk.Combobox(root, textvariable=selected_region,values=region_names)
+        self.region_combobox.pack()
+        self.region_combobox.grid(row=1, column=1)
 
-        root = tk.Tk()
-        root.title("Les regions:")
 
-        selected = tk.StringVar()
-        dropdown = ttk.Combobox(root, textvariable=selected)
-        dropdown['values'] = options
-        dropdown.pack()
-        dropdown.bind("<<ComboboxSelected>>", on_select)
-
-        root.mainloop()
-
-        conn.close()
+        '''self.input = ttk.Entry(self)
+        self.input.grid(row=1, column=1)
+        self.input.bind('<Return>', self.searchRegion) # On bind l'appui de la touche entrée sur la case de saisie, on peut donc utiliser soit la touche entrée soit le bouton valider
+        ttk.Button(self, text='Valider', command=self.searchRegion).grid(row=1, column=2)
 
         # On place un label sans texte, il servira à afficher les erreurs
         self.errorLabel = ttk.Label(self, anchor="center", font=('Helvetica', '10', 'bold'))
@@ -53,7 +55,7 @@ class Window(tk.Toplevel):
         for column in columns:
             self.treeView.column(column, anchor=tk.CENTER, width=15)
             self.treeView.heading(column, text=column)
-        self.treeView.grid(columnspan=3, row=3, sticky='nswe')
+        self.treeView.grid(columnspan=3, row=3, sticky='nswe')'''
 
     # Fonction qui récupère la valeur saisie, exécute la requête et affiche les résultats
     # La fonction prend un argument optionnel event car elle peut être appelée de deux manières :
@@ -66,8 +68,7 @@ class Window(tk.Toplevel):
         self.treeView.delete(*self.treeView.get_children())
 
         # On récupère la valeur saisie dans la case
-        
-
+        region = self.input.get()
 
         # Si la saisie est vide, on affiche une erreur
         if len(region) == 0:
