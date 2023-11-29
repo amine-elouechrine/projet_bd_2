@@ -39,7 +39,6 @@ class Window(tk.Toplevel):
         nbquery = 0
 
         # On récupère les départements
-        tab = []
         try:
             cursor = db.data.cursor()
 
@@ -60,14 +59,10 @@ class Window(tk.Toplevel):
             # Si tout s'est bien passé
         else :
 
-            i = 0
             for row in query:
-                print("----",i)
-                self.treeView.insert('', tk.END, values=row)
-                i += 1
+                self.treeview.insert('', tk.END, values=row)
 
-            if i == 0:
-                self.errorLabel.config(foreground='orange', text="Aucun résultat !")
+
 
 
             # On arrête le chrono et on calcule puis affiche le temps passé à l'extraction des données
