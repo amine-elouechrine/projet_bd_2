@@ -43,7 +43,7 @@ class Window(tk.Toplevel):
             cursor = db.data.cursor()
 
             query = cursor.execute("""SELECT code_departement, nom_departement, strftime('%Y', Mesures.date_mesure) AS annee,
-                                             ROUND(avg(temperature_moy_mesure), 2) AS moyenne, min(emperature_min_mesure) AS minimum,
+                                             ROUND(avg(temperature_moy_mesure), 2) AS moyenne, min(temperature_min_mesure) AS minimum,
                                              max(Mesures.temperature_min_mesure) AS maximum
                                             FROM Departements
                                             JOIN Mesures USING (code_departement)
