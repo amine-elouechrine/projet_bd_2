@@ -14,3 +14,12 @@ class Window(tk.Toplevel):
         - par mois, l’évolution de la moyenne des températures minimales
         - par mois, l’évolution des totaux de coûts de travaux tout type confondu""",
                   wraplength=500, anchor="center", font=('Helvetica', '10', 'bold')).grid(sticky="we", row=0)
+
+
+'''
+requete sql par rapport a l'evolution de la moyenne des temperatures minimales
+
+SELECT  AVG(temperature_min_mesure) AS moyenne_temperature, strftime('%Y-%m', date_mesure) AS mois
+FROM Mesures
+Where code_departement=38 and strftime('%Y')
+GROUP BY strftime('%Y-%m', date_mesure);'''
