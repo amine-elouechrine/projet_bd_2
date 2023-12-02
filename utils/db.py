@@ -92,20 +92,34 @@ def insertDB():
             ['code_insee_departement', 'date_obs', 'tmin', 'tmax', 'tmoy']
         )
 
-
-
-        print("before")
         #on ajoute les Communes
         read_csv_file(
             "data\csv\Communes.csv",';',
             "insert into Communes (code_commune,code_departement,nom_commune,statue,altitude_moyenne,population,superffecie,code_canton,code_arrondissement) VALUES (?,?,?,?,?,?,?,?,?)" ,
             ['Code Commune', 'Code Département', 'Commune', 'Statut' ,'Altitude Moyenne' ,'Population' ,'Superficie' ,'Code Canton' ,'Code Arrondissement']
         )
-        print("after")
         print("**************************************************************")
 
+        #Isolation
+        read_csv_file(
+            "data\csv\Isolation.csv",';',
+            "INSERT INTO Isolation(cout_taotal_ht,cout_induit_ht,type_logement,annee_traveaux,annee_construction_logement,poste,isolant,epaisseur,surface,code_departement,code_region) VALUES(?,?,?,?,?,?,?,?,?,?,?)",
+            ['cout_total_ht','cout_induit_ht','type_logement','annee_travaux','annee_construction','poste_isolation','isolant','epaisseur','surface','code_departement','code_region']
+        )
 
+        #Chauffage
+        read_csv_file(
+            "data\csv\Chauffage.csv",';',
+            "INSERT INTO Chauffage(cout_taotal_ht,cout_induit_ht,type_logement,annee_traveaux,annee_construction_logement,energie_avant_traveaux,energie_installe,generateur,type_chaudiere,code_departement,code_region) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+            ['cout_total_ht','cout_induit_ht','type_logement','annee_travaux','annee_construction','energie_chauffage_avt_travaux','energie_chauffage_installee','generateur','type_chaudiere','code_departement','code_region']
+        )
 
+        #photoVoltaique
+        read_csv_file(
+            "data\csv\Photovoltaique.csv",';',
+            "INSERT INTO Photovoltaique(cout_taotal_ht,cout_induit_ht,type_logement,annee_traveaux,annee_construction_logement,puissance_installe,type_panneau,code_departement,code_region) VALUES(?,?,?,?,?,?,?,?,?)",
+            ['cout_total_ht','cout_induit_ht','type_logement','annee_travaux','annee_construction','puissance_installee','type_panneaux','code_departement','code_region']
+        )
 
 
 

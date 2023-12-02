@@ -37,46 +37,58 @@ create table IF NOT EXISTS Communes(
     CONSTRAINT FK_code_departement_Communes FOREIGN KEY (code_departement) REFERENCES Departements (code_departement) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-create table IF NOT EXISTS Traveaux (
-    id_traveaux INTEGER  PRIMARY KEY AUTOINCREMENT,
+
+create table IF NOT EXISTS Isolation (
+    id_isolation INTEGER  PRIMARY KEY AUTOINCREMENT,
     cout_taotal_ht FLOAT,
     cout_induit_ht  FLOAT,
     type_logement TEXT,
     annee_traveaux DATE,
     annee_construction_logement DATE,
+    poste TEXT,
+    isolant TEXT,
+    epaisseur INTEGER,
+    surface FLOAT,
     code_departement TEXT,
     code_region INTEGER,
 
     CONSTRAINT FK_code_departement_Traveaux FOREIGN KEY (code_departement) REFERENCES Departements (code_departement) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT FK_code_region_Traveaux FOREIGN KEY (code_region) REFERENCES Regions (code_region) ON DELETE CASCADE ON UPDATE CASCADE
-    );
-
-create table IF NOT EXISTS Isolation (
-    id_traveaux INTEGER,
-    poste TEXT,
-    isolant TEXT,
-    epaisseur INTEGER,
-    surface FLOAT,
-    CONSTRAINT PK_id_Traveaux_Isolation PRIMARY KEY (id_traveaux),
-    CONSTRAINT FK_id_traveaux_Isolation FOREIGN KEY (id_traveaux) REFERENCES Traveaux (id_traveaux) ON DELETE CASCADE ON update CASCADE
 );
 
+
 create table IF NOT EXISTS Chauffage (
-    id_traveaux INTEGER,
+    id_chauffage INTEGER PRIMARY KEY AUTOINCREMENT,
+    cout_taotal_ht FLOAT,
+    cout_induit_ht  FLOAT,
+    type_logement TEXT,
+    annee_traveaux DATE,
+    annee_construction_logement DATE,
     energie_avant_traveaux TEXT,
     energie_installe TEXT,
     generateur TEXT,
     type_chaudiere TEXT,
-    CONSTRAINT PK_id_id_traveaux_Chauffage PRIMARY KEY (id_traveaux),
-    CONSTRAINT FK_id_traveaux_Chauffage FOREIGN KEY (id_traveaux) REFERENCES Traveaux (id_traveaux) ON DELETE CASCADE ON UPDATE CASCADE
+    code_departement TEXT,
+    code_region INTEGER,
+
+    CONSTRAINT FK_code_departement_Traveaux FOREIGN KEY (code_departement) REFERENCES Departements (code_departement) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT FK_code_region_Traveaux FOREIGN KEY (code_region) REFERENCES Regions (code_region) ON DELETE CASCADE ON UPDATE CASCADE
+
 );
 
 create table IF NOT EXISTS Photovoltaique(
-    id_traveaux INTEGER,
+    id_photovoltaique INTEGER PRIMARY KEY  AUTOINCREMENT,
+    cout_taotal_ht FLOAT,
+    cout_induit_ht  FLOAT,
+    type_logement TEXT,
+    annee_traveaux DATE,
+    annee_construction_logement DATE,
     puissance_installe INTEGER,
     type_panneau TEXT,
-    CONSTRAINT PK_id_traveaux_Photovoltaique PRIMARY KEY (id_traveaux),
-    CONSTRAINT FK_id_traveaux_Photovoltaique FOREIGN KEY (id_traveaux) REFERENCES Traveaux (id_traveaux) ON DELETE CASCADE ON UPDATE CASCADE
+    code_departement TEXT,
+    code_region INTEGER,
+    CONSTRAINT FK_code_departement_Traveaux FOREIGN KEY (code_departement) REFERENCES Departements (code_departement) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT FK_code_region_Traveaux FOREIGN KEY (code_region) REFERENCES Regions (code_region) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
