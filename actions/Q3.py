@@ -18,36 +18,34 @@ class Window(tk.Toplevel):
         self.title('Q3 : départements pour une région donnée (version dynamique)')
         display.defineGridDisplay(self, 3, 3)
         self.grid_rowconfigure(3, weight=10) #On donne un poids plus important à la dernière ligne pour l'affichage du tableau
-        ttk.Label(self, text="On a repris le code de F2. Modifier l'interface pour proposer un choix de la région sans saisie manuelle (par exemple un proposer un menu déroulant avec les valeurs extraites de la base, ou toute autre idée).",
+        ttk.Label(self, text="On a repris le code de F2. Modifier l'interface pour proposer un choix dynamique de la région (par exemple un menu déroulant avec les valeurs extraites de la base, ou toute autre idée).",
                   wraplength=500, anchor="center", font=('Helvetica', '10', 'bold')).grid(sticky="we", row=0,columnspan=3)
 
         # Affichage du label, de la case de saisie et du bouton valider
         ttk.Label(self, text='Veuillez indiquer une région :', anchor="center", font=('Helvetica', '10', 'bold')).grid(row=1, column=0)
         #TODO Q3 C'est cette partie que l'on souhaite changer pour un choix dynamique de la région
-
-
         cursor = db.data.cursor()
-        cursor.execute("""SELECT nom_region
-                                FROM Region""", )
-        region = cursor.fetchall()
-        region_names = [region[0] for region in region]  # Créer une liste avec les noms des régions
-        root=tk.Tk()
-        root.title("Liste des Régions")
-
-        selected_region = tk.StringVar()
-        self.region_combobox = ttk.Combobox(root, textvariable=selected_region,values=region_names)
-        self.region_combobox.pack()
-        self.region_combobox.grid(row=1, column=1)
+        cursor.execute("""SELECT  nom_region
+                                            FROM Regions """)
+        region =cursor.fetchall()
+        options = [row[0] for row in region]
 
 
-        '''self.input = ttk.Entry(self)
-        self.input.grid(row=1, column=1)
-        self.input.bind('<Return>', self.searchRegion) # On bind l'appui de la touche entrée sur la case de saisie, on peut donc utiliser soit la touche entrée soit le bouton valider
-        ttk.Button(self, text='Valider', command=self.searchRegion).grid(row=1, column=2)
+        self.title("Les regions:")
+        selected_region = tk.StringVar(self)
+
+        self.dropdown = ttk.Combobox(self, textvariable=selected_region,values=options)
+        self.dropdown.grid(row=1,column=1)
+
+        self.dropdown.bind("<<ComboboxSelected>>", self.searchRegion)
+
+
+
 
         # On place un label sans texte, il servira à afficher les erreurs
         self.errorLabel = ttk.Label(self, anchor="center", font=('Helvetica', '10', 'bold'))
         self.errorLabel.grid(columnspan=3, row=2, sticky="we")
+
 
         # On prépare un treeView vide pour l'affichage de nos résultats
         columns = ('code_departement', 'nom_departement',)
@@ -55,7 +53,7 @@ class Window(tk.Toplevel):
         for column in columns:
             self.treeView.column(column, anchor=tk.CENTER, width=15)
             self.treeView.heading(column, text=column)
-        self.treeView.grid(columnspan=3, row=3, sticky='nswe')'''
+        self.treeView.grid(columnspan=3, row=3, sticky='nswe')
 
     # Fonction qui récupère la valeur saisie, exécute la requête et affiche les résultats
     # La fonction prend un argument optionnel event car elle peut être appelée de deux manières :
@@ -64,15 +62,16 @@ class Window(tk.Toplevel):
     # TODO Q3 Modifier la fonction searchRegion pour un choix dynamique de la région
     def searchRegion(self, event = None):
 
-        # On vide le treeView (pour rafraichir les données si quelque chose était déjà présent)
-        self.treeView.delete(*self.treeView.get_children())
+
 
         # On récupère la valeur saisie dans la case
-        region = self.input.get()
+        region=self.dropdown.get()
 
         # Si la saisie est vide, on affiche une erreur
         if len(region) == 0:
             self.errorLabel.config(foreground='red', text="Veuillez saisir une région !")
+
+
 
         # Si la saisie contient quelque chose
         else :
